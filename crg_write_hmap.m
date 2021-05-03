@@ -14,13 +14,15 @@ else
 end
 
 if length(crg.v) == 1
-    v = [-crg.v crg.v];
+    width = 2 * crg.v;
 else
-    v = crg.v;
+    width = crg.v(end) - crg.v(1);
 end
 
 du = len / (nu-1);
 u = (0:du:len);
+v = (0:du:width);
+nv = length(v);
 
 % Create triangularization
 [x,y] = meshgrid(double(u), double(v));
@@ -33,7 +35,7 @@ zmax = max(z2);
 % Option1:  Rescale in [0,1], reshape, and convert to uint16
 alpha = 1.0 / (zmax - zmin);
 beta = -alpha * zmin;
-z3 = reshape(alpha * z2 + beta, size(z'));
+z3 = reshape(alpha * z2 + beta, [nv,nu]);
 z4 = im2uint16(z3);
 
 % % % Option 2: Rescale to [0, 65535], reshape, and convert to uint16

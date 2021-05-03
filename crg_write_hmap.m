@@ -1,10 +1,8 @@
 function [] = crg_write_hmap(crg, filename)
 % crg_write_hmap - export the CRG road surface to a height map image
 %    crg_write_obj(crg, filename)
-% Note that crg_write_hmap always writes a 16-nbit PNG format, regardless
+% Note that crg_write_hmap always writes a 16-bit PNG format, regardless
 % of the file extension in 'filename'.  
-
-addpath(genpath('WOBJ_toolbox/'));
 
 z = crg.z;
 nu = size(z, 1);
@@ -16,19 +14,13 @@ else
 end
 
 if length(crg.v) == 1
-    width = 2 * crg.v;
     v = [-crg.v crg.v];
 else
-    width = crg.v(end) - crg.v(1);
     v = crg.v;
 end
 
 du = len / (nu-1);
 u = (0:du:len);
-
-% % disp(['Road length: ', num2str(len)])
-% % disp(['Road width:  ', num2str(width)])
-% % disp(['Resolution:  ', num2str(du)])
 
 % Create triangularization
 [x,y] = meshgrid(double(u), double(v));
@@ -51,6 +43,6 @@ z4 = im2uint16(z3);
 % % z4 = uint16(z3);
 
 % Write PNG
-class(z4)
+%%class(z4)
 imwrite(z4, filename, 'png', 'BitDepth', 16);
 

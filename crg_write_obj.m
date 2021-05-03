@@ -14,19 +14,13 @@ else
 end
 
 if length(crg.v) == 1
-    width = 2 * crg.v;
     v = [-crg.v crg.v];
 else
-    width = crg.v(end) - crg.v(1);
     v = crg.v;
 end
 
 du = len / (nu-1);
 u = (0:du:len);
-
-% % disp(['Road length: ', num2str(len)])
-% % disp(['Road width:  ', num2str(width)])
-% % disp(['Resolution:  ', num2str(du)])
 
 % Create triangularization
 [x,y] = meshgrid(double(u), double(v));

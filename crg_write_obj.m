@@ -1,6 +1,6 @@
 function [] = crg_write_obj(crg, filename)
-% crg2obj - export the CRG road surface to a Wavefront obj file
-%    crg2obj(crg, filename)
+% crg_write_obj - export the CRG road surface to a Wavefront obj file
+%    crg_write_obj(crg, filename)
 
 addpath(genpath('WOBJ_toolbox/'));
 
@@ -24,9 +24,9 @@ end
 du = len / (nu-1);
 u = (0:du:len);
 
-disp(['Road length: ', num2str(len)])
-disp(['Road width:  ', num2str(width)])
-disp(['Resolution:  ', num2str(du)])
+% % disp(['Road length: ', num2str(len)])
+% % disp(['Road width:  ', num2str(width)])
+% % disp(['Resolution:  ', num2str(du)])
 
 % Create triangularization
 [x,y] = meshgrid(double(u), double(v));
@@ -38,17 +38,17 @@ zz = crg_eval_uv2z(crg, [x(:) y(:)]);
 % Calculate surface normals
 [nx,ny,nz] = surfnorm(x,y,z');
 
-% figure
-% fasp = 0.01;
-% if isfield(crg, 'fopt') && isfield(crg.fopt, 'asp')
-%     fasp = crg.fopt.asp;
-% end
-% trisurf(T,x,y,z')
-% shading interp
-% daspect([1 1 fasp])
-% axis vis3d
-% view(0,0)
-% grid on
+% % figure
+% % fasp = 0.01;
+% % if isfield(crg, 'fopt') && isfield(crg.fopt, 'asp')
+% %     fasp = crg.fopt.asp;
+% % end
+% % trisurf(T,x,y,z')
+% % shading interp
+% % daspect([1 1 fasp])
+% % axis vis3d
+% % view(0,0)
+% % grid on
 
 % Create OBJ structure
 OBJ.vertices = [x(:) y(:) zz];

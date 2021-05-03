@@ -111,14 +111,11 @@ rmsFinal = (rms(z1) + rms(z2))/2;
 % Create CRG data structure
 uinc = du;
 nu = length(x);
-np = nu-1;
-p = zeros(1,np);
-s = zeros(1,np);
 nv = 4;
 data.u = (nu-1)*uinc;
 data.v = [-width/2 -0.005 0.005 width/2];
-data.p = p; % direction angle changes from i to i+1
-data.s = s; % slope angle changes from i to i+1
+data.p = 0;
+data.s = slope;
 data.z = zeros(nu,nv);
 data.z(1:end,1) = z1';
 data.z(1:end,2) = z1';
@@ -131,4 +128,4 @@ data.ct{3} = ['Width = ', num2str(width), ' m'];
 data.ct{4} = ['RMS = ', num2str(rmsFinal), ' m'];
 data.ct{5} = ['Simple Correlation = ', num2str(c), 'left/right'];
 
-crg = crg_single(data);
+crg = crg_check(crg_single(data));

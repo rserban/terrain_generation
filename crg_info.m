@@ -35,10 +35,10 @@ info.zmin = zmin;
 info.zmax = zmax;
 info.rms = rms(z);
 
-disp(['Road length: ', num2str(len)])
-disp(['Road width:  ', num2str(width)])
-disp(['Resolution:  ', num2str(du)])
-disp(['Min z:       ', num2str(zmin)])
-disp(['Max z:       ', num2str(zmax)])
-disp(['RMS:         ', num2str(mean(rms(z)))])
+disp(['Road length: ', num2str(len), ' m'])
+disp(['Road width:  ', num2str(width), ' m'])
+disp(['Resolution:  ', num2str(du), ' m'])
+disp(['Min z:       ', num2str(zmin), ' m'])
+disp(['Max z:       ', num2str(zmax), ' m'])
+disp(['Mean RMS:    ', num2str(mean(rms(z))), ' m'])
 

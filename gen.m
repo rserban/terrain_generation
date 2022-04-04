@@ -35,6 +35,13 @@ out_dir = sprintf('rms%.1f_%.1f_%.1f', RMS, width, slope);
 mkdir('.', 'DATA');
 mkdir('DATA', out_dir);
 
+%% Write path file
+
+path_file = sprintf('DATA/%s/path.txt', out_dir);
+fp = fopen(path_file, 'w');
+fprintf(fp, '%f %f 0.0\n', [path zeros(size(path,1),1)]);
+fclose(fp);
+
 %% Create road mesh
 
 % Create CRG road specification

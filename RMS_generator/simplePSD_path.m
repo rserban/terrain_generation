@@ -7,6 +7,7 @@ function [crg] = simplePSD_path(path, width, RMS, varargin)
 % Optional arguments:
 %    'resolution'      - spatial resolution [m] (default: 0.1)
 %    'slope'           - lane slope [rad] (default: 0)
+%    'banking'         - lane banking [rad] (default: 0)
 %    'wavelengthRange' - min/max PSD wavelength [m] (default: [0.3 10])
 %    'w'               - PSD angular frequency (???) (default: 2)
 %    'phi0'            - PSD ??? (default: 1e-5)
@@ -37,6 +38,7 @@ addRequired(p,'RMS',@isnumeric);
 
 addOptional(p, 'resolution', 0.1, @isnumeric);
 addOptional(p, 'slope', 0.0, @isnumeric);
+addOptional(p, 'banking', 0.0, @isnumeric);
 addOptional(p, 'wavelengthRange', [0.3 10.0], checkRange);
 addOptional(p, 'w', 2.0, @isnumeric);
 addOptional(p, 'phi0', 1e-5, @isnumeric);
@@ -54,6 +56,7 @@ end
 % Extract parameters
 du = p.Results.resolution;
 slope = p.Results.slope;
+banking = p.Results.banking;
 Lrange = p.Results.wavelengthRange;
 Lmin = Lrange(1);
 Lmax = Lrange(2);
@@ -127,6 +130,7 @@ data.u = (nu-1)*du;
 data.v = [-width/2 -0.05 0.05 width/2];
 data.p = phi;
 data.s = slope;
+data.b = banking;
 data.z = zeros(nu,nv);
 data.z(1:end,1) = z1';
 data.z(1:end,2) = z1';

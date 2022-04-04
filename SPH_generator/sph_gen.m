@@ -1,5 +1,20 @@
 function [] = sph_gen(obj_file, delta, render, varargin)
-%
+% sph_gen - Create SPH particles and BCE markers for SPH granular terrain
+%    sph_gen(obj_file, delta, render)
+% where
+%    obj_file - name of the Wavefront OBJ file with a terrain mesh
+%    delta    - SPH particle separation
+%    render   - plot intermediate results
+% Optional arguments:
+%    'min_depth'  - minimum depth of granular material below input mesh
+%                   (default: 0.3)
+%    'num_bce'    - number of BCE marker layers on bottom and side walls
+%                   (default: 3)
+%    'use_refined_mesh'
+%    'flat_bottom'
+%    'flat_top'
+% --------------------------------------------------------------
+% Radu Serban
 %
 
 % Parse inputs

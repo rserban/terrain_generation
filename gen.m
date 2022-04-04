@@ -1,23 +1,25 @@
-
-
-%%
+%% Problem specification
 
 % Path waypoints (will be smoothed with piecewise cubic Hermite)
+% x-y pairs (m)
 path = [ 0 0; 5 0; 10 2; 15 4; 20 2; 25 2];
 
-% Road width
+% Road width (m)
 width = 4;
 
-% Desired RMS (road roughness) in inches
-RMS = 4; 
+% Desired road roughness as RMS (inches)
+RMS = 4;
 
-% Slope in radians
+% Slope (rad)
 slope = 0;
+
+% Banking (rad)
+banking = 0;
 
 % Left/right RMS correlation
 corr = 1.0;
 
-% SPH separation
+% SPH separation (m)
 sph_delta = 0.02;
 
 % Show CRG plots?
@@ -26,14 +28,14 @@ show_crg = true;
 % Show SPH plots?
 show_sph = true;
 
-%%
-addpath(genpath('RMS_generator'));
-addpath(genpath('SPH_generator'));
+%% Create output directory
 
-% Create output directory
 out_dir = sprintf('rms%.1f_%.1f_%.1f', RMS, width, slope);
 mkdir('.', 'DATA');
 mkdir('DATA', out_dir);
+
+addpath(genpath('RMS_generator'));
+addpath(genpath('SPH_generator'));
 
 %% Write path file
 
@@ -48,6 +50,7 @@ fclose(fp);
 in2m = 0.0254;
 crg = simplePSD_path(path, width, RMS * in2m, ...
     'slope', slope, ...
+    'banking', banking, ...
     'wavelengthRange',[0.3 10], ...
     'correlation', corr);
 

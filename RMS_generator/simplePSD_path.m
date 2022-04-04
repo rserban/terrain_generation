@@ -95,12 +95,16 @@ Psit = 2*pi*rand(size(Om));
 Psi2 = Psi1 * c + Psit * (1-c); % possible correlated right coeffs
 
 % Create CRG path
+% NOTE: use piecewise cubic Hermite interpolation (CRG does not like big
+% jumps in curvature!)
 path_len = cumsum([0; sqrt(sum(diff(path).^2, 2))]);
 len = sum(sqrt(sum(diff(path).^2, 2)));
 u = 0:du:len;
-x = interp1(path_len, path(:,1), u);
-y = interp1(path_len, path(:,2), u);
-p = atan2(diff(y), diff(x)); 
+%%x = interp1(path_len, path(:,1), u);
+%%y = interp1(path_len, path(:,2), u);
+x = pchip(path_len, path(:,1), u);
+y = pchip(path_len, path(:,2), u);
+phi = atan2(diff(y), diff(x)); 
 
 % Create elevation
 nu = length(u);
@@ -121,7 +125,7 @@ nu = length(u);
 nv = 4;
 data.u = (nu-1)*du;
 data.v = [-width/2 -0.05 0.05 width/2];
-data.p = p;
+data.p = phi;
 data.s = slope;
 data.z = zeros(nu,nv);
 data.z(1:end,1) = z1';

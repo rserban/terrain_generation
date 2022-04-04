@@ -41,7 +41,7 @@ addpath(genpath('SPH_generator'));
 
 path_file = sprintf('DATA/%s/path.txt', out_dir);
 fp = fopen(path_file, 'w');
-fprintf(fp, '%f %f 0.0\n', [path zeros(size(path,1),1)]);
+fprintf(fp, '%f %f %f\n', [path  zeros(size(path,1),1)]');
 fclose(fp);
 
 %% Create road mesh

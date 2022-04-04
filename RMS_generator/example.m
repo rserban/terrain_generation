@@ -1,7 +1,7 @@
 ft2m = 0.3048;
 in2m = 0.0254;
 
-road_length = 12; %1000 * ft2m;
+road_length = 20; %1000 * ft2m;
 road_width = 4; %15 * ft2m;
 desired_RMS = 4 * in2m;
 
@@ -11,7 +11,7 @@ slope = atan(drop/road_length);
 crg = simplePSD(road_length, road_width, desired_RMS, ...
     'slope', slope, ...
     'wavelengthRange',[0.3 10], ...
-    'correlation', 1.0);
+    'correlation', 0.4);
 
 crg_show(crg);
 crg_info(crg);

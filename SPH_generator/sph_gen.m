@@ -1,12 +1,12 @@
-obj_file = 'rms_test2.obj';
-delta = 0.1;
+obj_file = 'rms4_20x4.obj';
+delta = 0.02;
 min_depth = 0.3;
 num_bce = 3;
 use_refined_mesh = false;
 flat_bottom = false;
 flat_top = false;
 
-render = true;
+render = false;
 
 % -------------------------------------------------------------------------
 addpath(genpath('../WOBJ_toolbox/'));
@@ -59,25 +59,31 @@ y = min(p2(:,2)) : delta : max(p2(:,2));
 
 % Traverse the 2D grid and check if grid node inside poly1 and/or poly2.
 % Collect grid nodes in two arrays
-n1 = [];
-n2 = [];
+est_size = length(x) * length(y);
+n1 = zeros(est_size, 2);
+n2 = zeros(est_size, 2);
+i1 = 0;
+i2 = 0;
 for ix = 1:length(x)
     for iy = 1:length(y)
         check2 = inpolygon(x(ix), y(iy), p2(:,1), p2(:,2));
         if ~check2
             continue
         end
-        check1 = inpolygon(x(ix), y(iy), p1(:,1), p1(:,2));
+        check1 = inpolygon(x(ix), y(iy), p1(:,1), p1(:,2));   
         if check1
-           n1 = [n1 ; [x(ix) y(iy)]];
+           i1 = i1 + 1;
+           n1(i1,:) = [x(ix) y(iy)];
         else
-           n2 = [n2 ; [x(ix) y(iy)]]; 
+           i2 = i2 + 1;
+           n2(i2,:) = [x(ix) y(iy)];
         end
     end
 end
-
-fprintf('Inside points:   %d\n', size(n1, 1));
-fprintf('Wallside points: %d\n', size(n2, 1));
+fprintf('Inside points:   %d\n', i1);
+fprintf('Wallside points: %d\n', i2);
+n1 = n1(1:i1,:);
+n2 = n2(1:i2,:);
 
 % -------------------------------------------------------------------------
 if render
@@ -120,8 +126,9 @@ end
 % -------------------------------------------------------------------------
 
 % Open output files
-fname1 = sprintf('%s_particles.txt', filename);
-fname2 = sprintf('%s_bce.txt', filename);
+delta_mm = cast(delta * 1000, 'uint8');
+fname1 = sprintf('%s_%dmm_particles.txt', filename, delta_mm);
+fname2 = sprintf('%s_%dmm_bce.txt', filename, delta_mm);
 f1 = fopen(fname1, 'w');
 f2 = fopen(fname2, 'w');
 fprintf(f1, 'x, y, z,\n');
@@ -129,6 +136,8 @@ fprintf(f2, 'x, y, z,\n');
 
 % Create initial SPH particle locations and bottom BCE markers.
 % For each inner grid point, create markers in a vertical segment
+n_part = 0;
+n_bce = 0;
 for i = 1:length(h1)
     % SPH markers
     if flat_bottom
@@ -139,6 +148,7 @@ for i = 1:length(h1)
     while h <= h1(i)
        fprintf(f1, '%f, %f, %f,\n', n1(i,1), n1(i,2), h);
        h = h + delta;
+       n_part = n_part + 1;
     end
     
     % Bottom BCE markers
@@ -150,6 +160,7 @@ for i = 1:length(h1)
     for j = 1:num_bce
         fprintf(f2, '%f, %f, %f,\n', n1(i,1), n1(i,2), h);
         h = h - delta;
+        n_bce = n_bce + 1;
     end
 end
 
@@ -168,11 +179,15 @@ for i = 1:length(h2)
     while h <= hmax
         fprintf(f2, '%f, %f, %f,\n', n2(i,1), n2(i,2), h);
         h = h + delta;
+        n_bce = n_bce + 1;
     end
 end
 
 fclose(f1);
 fclose(f2);
+
+fprintf('SPH markers: %d\n', n_part);
+fprintf('BCE markers: %d\n', n_bce);
 
 % -------------------------------------------------------------------------
 if render

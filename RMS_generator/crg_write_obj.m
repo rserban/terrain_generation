@@ -4,9 +4,6 @@ function [] = crg_write_obj(crg, filename)
 
 addpath(genpath('../WOBJ_toolbox/'));
 
-z = crg.z;
-nu = size(z, 1);
-
 if length(crg.u) == 1
     len = crg.u;
 else
@@ -19,18 +16,22 @@ else
     v = crg.v;
 end
 
-du = len / (nu-1);
+du = crg.head.uinc;
 u = (0:du:len);
 
-% Create triangularization
-[x,y] = meshgrid(double(u), double(v));
-T = delaunay(x,y);
+z = crg.z';
 
-% Evaluate z at all mesh points
-zz = crg_eval_uv2z(crg, [x(:) y(:)]);
+% Create mesh grid in (uv) space
+[U, V] = meshgrid(double(u), double(v));
+T = delaunay(U,V);
+
+% Create triangularization in (xy) space
+XY = crg_eval_uv2xy(crg, [U(:) V(:)]);
+x = reshape(XY(:,1), size(U));
+y = reshape(XY(:,2), size(U));
 
 % Calculate surface normals
-[nx,ny,nz] = surfnorm(x,y,z');
+[nx,ny,nz] = surfnorm(x,y,z);
 
 % % figure
 % % fasp = 0.01;
@@ -45,7 +46,7 @@ zz = crg_eval_uv2z(crg, [x(:) y(:)]);
 % % grid on
 
 % Create OBJ structure
-OBJ.vertices = [x(:) y(:) zz];
+OBJ.vertices = [x(:) y(:) z(:)];
 OBJ.vertices_normal = [nx(:) ny(:) nz(:)];
 OBJ.objects(1).type = 'f';
 OBJ.objects(1).data.vertices = T;

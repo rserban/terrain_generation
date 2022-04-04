@@ -1,12 +1,34 @@
-obj_file = 'rms4_20x4.obj';
-delta = 0.02;
-min_depth = 0.3;
-num_bce = 3;
-use_refined_mesh = false;
-flat_bottom = false;
-flat_top = false;
+function [] = sph_gen(obj_file, delta, render, varargin)
+%
+%
 
-render = false;
+% Parse inputs
+p = inputParser;
+
+addRequired(p, 'obj_file', @ischar);
+addRequired(p,'delta',@isnumeric);
+addRequired(p, 'render', @islogical);
+
+addOptional(p, 'min_depth', 0.3, @isnumeric);
+addOptional(p, 'num_bce', 3, @isnumeric);
+addOptional(p, 'use_refined_mesh', false, @islogical);
+addOptional(p, 'flat_bottom', false, @islogical);
+addOptional(p, 'flat_top', false, @islogical);
+
+parse(p,obj_file,delta,render,varargin{:});
+disp('Parameters:');
+disp(p.Results)
+if ~isempty(p.UsingDefaults)
+   disp('Using defaults for: ')
+   disp(p.UsingDefaults)
+end
+
+% Extract parameters
+min_depth = p.Results.min_depth;
+num_bce = p.Results.num_bce;
+use_refined_mesh = p.Results.use_refined_mesh;
+flat_bottom = p.Results.flat_bottom;
+flat_top = p.Results.flat_top;
 
 % -------------------------------------------------------------------------
 addpath(genpath('../WOBJ_toolbox/'));
@@ -127,8 +149,8 @@ end
 
 % Open output files
 delta_mm = cast(delta * 1000, 'uint8');
-fname1 = sprintf('%s_%dmm_particles.txt', filename, delta_mm);
-fname2 = sprintf('%s_%dmm_bce.txt', filename, delta_mm);
+fname1 = sprintf('%s/particles_%dmm.txt', filepath, delta_mm);
+fname2 = sprintf('%s/bce_%dmm.txt', filepath, delta_mm);
 f1 = fopen(fname1, 'w');
 f2 = fopen(fname2, 'w');
 fprintf(f1, 'x, y, z,\n');

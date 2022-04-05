@@ -2,13 +2,13 @@
 
 % Path waypoints (will be smoothed with piecewise cubic Hermite)
 % x-y pairs (m)
-path = [ 0 0; 5 0; 10 2; 15 4; 20 2; 25 2];
+path = [ 0 0; 10 0; 20 3; 30 3];
 
 % Road width (m)
 width = 4;
 
 % Desired road roughness as RMS (inches)
-RMS = 4;
+RMS = 2;
 
 % Slope (rad)
 slope = 0;
@@ -39,9 +39,22 @@ addpath(genpath('SPH_generator'));
 
 %% Write path file
 
+n = size(path,1);
+p = zeros(3*n-2, 2);
+j = 1;
+for i = 1:n-1
+    p(j,:) = path(i,:);
+    dp = path(i+1,:)-path(i,:);
+    p(j+1,:) = path(i,:) + (1/3) * dp;
+    p(j+2,:) = path(i,:) + (2/3) * dp;
+    j = j + 3;
+end
+p(3*n-2,:) = path(n,:);
+
 path_file = sprintf('DATA/%s/path.txt', out_dir);
 fp = fopen(path_file, 'w');
-fprintf(fp, '%f %f %f\n', [path  zeros(size(path,1),1)]');
+fprintf(fp, '%d 3\n', size(p,1));
+fprintf(fp, '%f %f %f\n', [p  zeros(size(p,1),1)]');
 fclose(fp);
 
 %% Create road mesh

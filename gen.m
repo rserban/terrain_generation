@@ -1,4 +1,21 @@
 %% Problem specification
+%
+% Driver for generating SPH and BCE markers for an RMS lane along path
+
+% -------------------------------------------------------------------------
+% Radu Serban
+% -------------------------------------------------------------------------
+
+% Prefix for output directory.
+% The output directory (under DATA/) will be named
+%    [prefix]_rms[A]-[B]_[C]-[D]-[E]
+% where
+%    A - RMS value (inches)
+%    B - lane RMS correlation
+%    C - lane width (m)
+%    D - slope (rad)
+%    E - banking (rad)
+prefix = 'Scurve';
 
 % Path waypoints (will be smoothed with piecewise cubic Hermite)
 % x-y pairs (m)
@@ -17,7 +34,7 @@ slope = 0;
 banking = 0;
 
 % Left/right RMS correlation
-corr = 1.0;
+corr = 0.5;
 
 % SPH separation (m)
 sph_delta = 0.02;
@@ -30,10 +47,14 @@ show_sph = true;
 
 %% Create output directory
 
-out_dir = sprintf('rms%.1f_%.1f_%.1f', RMS, width, slope);
+out_dir = sprintf('%s_rms%.1f-%.1f_%.1f-%.1f-%.1f', prefix, ...
+    RMS, corr, ...
+    width, slope, banking);
 mkdir('.', 'DATA');
 mkdir('DATA', out_dir);
 
+addpath(genpath('OpenCRG_toolbox'));
+crg_init
 addpath(genpath('RMS_generator'));
 addpath(genpath('SPH_generator'));
 

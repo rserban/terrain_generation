@@ -19,9 +19,10 @@ function [crg] = simplePSD(len, width, RMS, varargin)
 %            ISBN 978-1-4398-9744-7 www.crcpress.com
 %
 % See also CRG_WRITE, CRG_READ, CRG_SHOW
-% --------------------------------------------------------------
+
+% -------------------------------------------------------------------------
 % Rainer Gerike, Radu Serban
-%
+% -------------------------------------------------------------------------
 
 % Parse inputs
 p = inputParser;

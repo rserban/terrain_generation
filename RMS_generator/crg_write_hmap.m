@@ -4,10 +4,12 @@ function [] = crg_write_hmap(crg, filename)
 % Note that crg_write_hmap always writes a 16-bit PNG format, regardless
 % of the file extension in 'filename'.  
 
+% -------------------------------------------------------------------------
+% Radu Serban
+% -------------------------------------------------------------------------
 
 % RADU TODO
 % Update to acommodate curved paths
-
 
 z = crg.z;
 nu = size(z, 1);

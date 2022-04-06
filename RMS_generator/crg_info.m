@@ -4,6 +4,10 @@ function info = crg_info(crg)
 % where info is a structure with the following fields:
 % length, width, resolution, zmin, zmax, rms.
 
+% -------------------------------------------------------------------------
+% Radu Serban
+% -------------------------------------------------------------------------
+
 if length(crg.u) == 1
     len = crg.u;
 else

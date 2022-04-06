@@ -2,6 +2,10 @@ function [] = crg_write_obj(crg, filename)
 % crg_write_obj - export the CRG road surface to a Wavefront obj file
 %    crg_write_obj(crg, filename)
 
+% -------------------------------------------------------------------------
+% Radu Serban
+% -------------------------------------------------------------------------
+
 addpath(genpath('../WOBJ_toolbox/'));
 
 if length(crg.u) == 1

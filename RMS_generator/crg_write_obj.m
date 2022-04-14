@@ -23,8 +23,6 @@ end
 du = crg.head.uinc;
 u = (0:du:len);
 
-z = crg.z';
-
 % Create mesh grid in (uv) space
 [U, V] = meshgrid(double(u), double(v));
 T = delaunay(U,V);
@@ -33,6 +31,8 @@ T = delaunay(U,V);
 XY = crg_eval_uv2xy(crg, [U(:) V(:)]);
 x = reshape(XY(:,1), size(U));
 y = reshape(XY(:,2), size(U));
+Z = crg_eval_uv2z(crg, [U(:) V(:)]);
+z = reshape(Z(:), size(U));
 
 % Calculate surface normals
 [nx,ny,nz] = surfnorm(x,y,z);

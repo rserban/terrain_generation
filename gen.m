@@ -19,7 +19,7 @@ prefix = 'Scurve';
 
 % Path waypoints (will be smoothed with piecewise cubic Hermite)
 % x-y pairs (m)
-path = [ 0 0; 10 0; 20 3; 30 3];
+path = [ 0 0; 10 0; 20 5; 30 5];
 
 % Road width (m)
 width = 4;
@@ -28,10 +28,10 @@ width = 4;
 RMS = 2;
 
 % Slope (rad)
-slope = 0;
+slope = 0 * (pi / 180);
 
 % Banking (rad)
-banking = 0;
+banking = 0 * (pi / 180);
 
 % Left/right RMS correlation
 corr = 0.5;
@@ -58,6 +58,13 @@ crg_init
 addpath(genpath('RMS_generator'));
 addpath(genpath('SPH_generator'));
 
+%% Write slope and banking
+
+slope_file = sprintf('DATA/%s/slope.txt', out_dir);
+fs = fopen(slope_file, 'w');
+fprintf(fs, '%f %f\n', slope, banking);
+fclose(fs);
+
 %% Write path file
 
 n = size(path,1);
@@ -72,10 +79,17 @@ for i = 1:n-1
 end
 p(3*n-2,:) = path(n,:);
 
+pz = zeros(3*n-2, 1);
+for i = 2:3*n-2
+   dx = p(i,1) - p(i-1,1);
+   dy = p(i,2) - p(i-1,2);
+   pz(i) = pz(i-1) + dx * tan(slope) + dy * tan(banking);
+end
+
 path_file = sprintf('DATA/%s/path.txt', out_dir);
 fp = fopen(path_file, 'w');
 fprintf(fp, '%d 3\n', size(p,1));
-fprintf(fp, '%f %f %f\n', [p  zeros(size(p,1),1)]');
+fprintf(fp, '%f %f %f\n', [p  pz]');
 fclose(fp);
 
 %% Create road mesh
@@ -100,5 +114,7 @@ crg_write_obj(crg, mesh_file);
 %% Create SPH and BCE markers
 
 sph_gen(mesh_file, sph_delta, show_sph);
+
+
 
 

@@ -19,13 +19,13 @@ prefix = 'Scurve';
 
 % Path waypoints (will be smoothed with piecewise cubic Hermite)
 % x-y pairs (m)
-path = [ 0 0; 10 0; 20 5; 30 5];
+path = [ 0 0; 10 0; 20 5; 25 5];
 
 % Road width (m)
 width = 4;
 
 % Desired road roughness as RMS (inches)
-RMS = 2;
+RMS = 0;
 
 % Slope (rad)
 slope = 0 * (pi / 180);
@@ -34,7 +34,7 @@ slope = 0 * (pi / 180);
 banking = 0 * (pi / 180);
 
 % Left/right RMS correlation
-corr = 0.5;
+corr = 1.0;
 
 % SPH separation (m)
 sph_delta = 0.02;
@@ -67,29 +67,19 @@ fclose(fs);
 
 %% Write path file
 
-n = size(path,1);
-p = zeros(3*n-2, 2);
-j = 1;
-for i = 1:n-1
-    p(j,:) = path(i,:);
-    dp = path(i+1,:)-path(i,:);
-    p(j+1,:) = path(i,:) + (1/3) * dp;
-    p(j+2,:) = path(i,:) + (2/3) * dp;
-    j = j + 3;
-end
-p(3*n-2,:) = path(n,:);
+n = size(path, 1);
 
-pz = zeros(3*n-2, 1);
-for i = 2:3*n-2
-   dx = p(i,1) - p(i-1,1);
-   dy = p(i,2) - p(i-1,2);
+pz = zeros(n, 1);
+for i = 2:n
+   dx = path(i,1) - path(i-1,1);
+   dy = path(i,2) - path(i-1,2);
    pz(i) = pz(i-1) + dx * tan(slope) + dy * tan(banking);
 end
 
 path_file = sprintf('DATA/%s/path.txt', out_dir);
 fp = fopen(path_file, 'w');
-fprintf(fp, '%d 3\n', size(p,1));
-fprintf(fp, '%f %f %f\n', [p  pz]');
+fprintf(fp, '%d 3\n', n);
+fprintf(fp, '%f %f %f\n', [path  pz]');
 fclose(fp);
 
 %% Create road mesh

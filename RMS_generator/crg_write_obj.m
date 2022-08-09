@@ -6,8 +6,6 @@ function [] = crg_write_obj(crg, filename)
 % Radu Serban
 % -------------------------------------------------------------------------
 
-addpath(genpath('../WOBJ_toolbox/'));
-
 if length(crg.u) == 1
     len = crg.u;
 else

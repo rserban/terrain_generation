@@ -57,6 +57,7 @@ addpath(genpath('OpenCRG_toolbox'));
 crg_init
 addpath(genpath('RMS_generator'));
 addpath(genpath('SPH_generator'));
+addpath(genpath('WOBJ_toolbox/'));
 
 %% Write slope and banking
 
